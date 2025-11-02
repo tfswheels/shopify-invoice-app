@@ -1,4 +1,4 @@
-import '@shopify/shopify-api/adapters/node/index.js';
+import '@shopify/shopify-api/adapters/node';
 import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
 import dotenv from 'dotenv';
 
