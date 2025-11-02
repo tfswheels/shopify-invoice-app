@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "migrate": "node database/migrate.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.0",

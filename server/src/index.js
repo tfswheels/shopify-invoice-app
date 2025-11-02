@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { testConnection, closePool } from './config/database.js';
+import authRoutes from './routes/auth.js';
+import ordersRoutes from './routes/orders.js';
 
 dotenv.config();
 
@@ -39,6 +42,10 @@ app.get('/', (req, res) => {
   });
 });
 
+// API Routes
+app.use('/auth', authRoutes);
+app.use('/api/orders', ordersRoutes);
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({
@@ -57,19 +64,24 @@ app.use((err, req, res, next) => {
 });
 
 // Start server - CRITICAL: Bind to 0.0.0.0 for Railway
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', async () => {
   console.log(`🚀 Invoice App Server running on port ${PORT}`);
   console.log(`📦 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🌐 Frontend URL: ${process.env.FRONTEND_URL}`);
+
+  // Test database connection
+  await testConnection();
 });
 
 // Graceful shutdown
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   console.log('SIGTERM received, shutting down gracefully');
+  await closePool();
   process.exit(0);
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   console.log('SIGINT received, shutting down gracefully');
+  await closePool();
   process.exit(0);
 });
