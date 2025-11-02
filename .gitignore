@@ -137,3 +137,40 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Dependencies
+node_modules/
+server/node_modules/
+admin/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+server/.env
+admin/.env
+
+# Build outputs
+dist/
+build/
+server/dist/
+admin/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Generated invoices & PDFs
+server/invoices/
+server/temp/
+*.pdf
