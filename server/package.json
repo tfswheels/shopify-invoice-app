@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
-    "migrate": "node database/migrate.js"
+    "migrate": "node database/migrate.js",
+    "migrate:prod": "node database/migrate-production.js"
   },
   "dependencies": {
     "@sendgrid/mail": "^8.1.0",

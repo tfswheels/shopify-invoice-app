@@ -6,7 +6,31 @@ This guide will help you set up and run the Shopify Invoice App locally for deve
 ## Prerequisites
 - Node.js 18+ installed
 - MySQL 8.0+ database
-- Shopify Partner account (for API credentials)
+- Shopify Partner account (for API credentials - optional for testing)
+
+## Quick Start (Mock Data Mode)
+
+Want to test the dashboard immediately without Shopify setup? We've got you covered!
+
+The app includes a **mock data mode** that lets you see the dashboard with sample orders:
+
+```bash
+# Backend
+cd server
+npm install
+# .env file is already created with USE_MOCK_DATA=true
+npm run dev
+
+# Frontend (in another terminal)
+cd admin
+npm install
+# .env file is already created
+npm run dev
+```
+
+Visit http://localhost:5173 and you'll see 3 sample orders with invoice preview!
+
+To switch to real Shopify data later, just set `USE_MOCK_DATA=false` in `server/.env` and add your Shopify credentials.
 
 ## Database Setup
 
@@ -40,12 +64,22 @@ cp .env.example .env
 Edit `admin/.env` with your configuration.
 
 ### 3. Run Database Migrations
+
+**Local/Development Database:**
 ```bash
 cd server
 npm run migrate
 ```
 
-This will create all required tables in both development and production databases.
+**Production Database (Railway):**
+```bash
+cd server
+npm run migrate:prod
+```
+
+See [PRODUCTION_SETUP.md](PRODUCTION_SETUP.md) for detailed production database setup instructions.
+
+This will create all required tables (13 total).
 
 ## Shopify App Setup
 
