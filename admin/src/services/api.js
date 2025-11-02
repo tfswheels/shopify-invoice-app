@@ -11,12 +11,6 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Get shop parameter from URL
-const getShopFromUrl = () => {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('shop');
-};
-
 // Auth API
 export const authApi = {
   verify: async (shop) => {
@@ -29,16 +23,14 @@ export const authApi = {
 
 // Orders API
 export const ordersApi = {
-  getAll: async (params = {}) => {
-    const shop = getShopFromUrl();
+  getAll: async (shop, params = {}) => {
     const { data } = await api.get('/api/orders', {
       params: { shop, ...params }
     });
     return data;
   },
 
-  getById: async (orderId) => {
-    const shop = getShopFromUrl();
+  getById: async (shop, orderId) => {
     const { data } = await api.get(`/api/orders/${orderId}`, {
       params: { shop }
     });
