@@ -4,8 +4,111 @@ import { query } from '../config/database.js';
 
 const router = express.Router();
 
-// Middleware to verify shop exists and get access token
+// Mock data for development/testing
+const mockOrders = [
+  {
+    id: '1001',
+    orderNumber: '#1001',
+    customerName: 'John Doe',
+    customerEmail: 'john@example.com',
+    amount: 299.99,
+    currency: 'USD',
+    status: 'paid',
+    fulfillmentStatus: 'fulfilled',
+    date: new Date().toISOString(),
+    lineItems: [
+      {
+        id: '1',
+        title: 'Premium Widget',
+        quantity: 2,
+        price: 99.99,
+        total: 199.98,
+        sku: 'WIDGET-001'
+      },
+      {
+        id: '2',
+        title: 'Deluxe Gadget',
+        quantity: 1,
+        price: 100.01,
+        total: 100.01,
+        sku: 'GADGET-002'
+      }
+    ],
+    billingAddress: {
+      address1: '123 Main Street',
+      address2: 'Suite 100',
+      city: 'San Francisco',
+      province: 'CA',
+      zip: '94102',
+      country: 'United States'
+    }
+  },
+  {
+    id: '1002',
+    orderNumber: '#1002',
+    customerName: 'Jane Smith',
+    customerEmail: 'jane@example.com',
+    amount: 599.50,
+    currency: 'USD',
+    status: 'pending',
+    fulfillmentStatus: 'unfulfilled',
+    date: new Date(Date.now() - 86400000).toISOString(),
+    lineItems: [
+      {
+        id: '3',
+        title: 'Enterprise Solution',
+        quantity: 1,
+        price: 599.50,
+        total: 599.50,
+        sku: 'ENT-001'
+      }
+    ],
+    billingAddress: {
+      address1: '456 Tech Ave',
+      city: 'Austin',
+      province: 'TX',
+      zip: '78701',
+      country: 'United States'
+    }
+  },
+  {
+    id: '1003',
+    orderNumber: '#1003',
+    customerName: 'Bob Johnson',
+    customerEmail: 'bob@example.com',
+    amount: 149.99,
+    currency: 'USD',
+    status: 'paid',
+    fulfillmentStatus: 'fulfilled',
+    date: new Date(Date.now() - 172800000).toISOString(),
+    lineItems: [
+      {
+        id: '4',
+        title: 'Standard Package',
+        quantity: 3,
+        price: 49.99,
+        total: 149.97,
+        sku: 'STD-PKG-001'
+      }
+    ],
+    billingAddress: {
+      address1: '789 Business Blvd',
+      city: 'New York',
+      province: 'NY',
+      zip: '10001',
+      country: 'United States'
+    }
+  }
+];
+
+// Middleware to verify shop exists and get access token (or use mock mode)
 async function verifyShop(req, res, next) {
+  // If mock data mode is enabled, skip shop verification
+  if (process.env.USE_MOCK_DATA === 'true') {
+    req.useMockData = true;
+    return next();
+  }
+
   try {
     const { shop } = req.query;
 
@@ -30,8 +133,17 @@ async function verifyShop(req, res, next) {
   }
 }
 
-// Get orders from Shopify
+// Get orders from Shopify (or mock data)
 router.get('/', verifyShop, async (req, res) => {
+  // Return mock data if enabled
+  if (req.useMockData) {
+    return res.json({
+      success: true,
+      orders: mockOrders,
+      count: mockOrders.length,
+      mock: true
+    });
+  }
   try {
     const { shop_domain, access_token } = req.shopData;
     const { limit = 50, status = 'any', created_at_min } = req.query;
@@ -99,6 +211,22 @@ router.get('/', verifyShop, async (req, res) => {
 
 // Get single order by ID
 router.get('/:orderId', verifyShop, async (req, res) => {
+  // Return mock data if enabled
+  if (req.useMockData) {
+    const { orderId } = req.params;
+    const order = mockOrders.find(o => o.id === orderId);
+
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    return res.json({
+      success: true,
+      order,
+      mock: true
+    });
+  }
+
   try {
     const { shop_domain, access_token } = req.shopData;
     const { orderId } = req.params;
