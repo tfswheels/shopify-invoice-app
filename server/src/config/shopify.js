@@ -1,5 +1,5 @@
-import '@shopify/shopify-api/adapters/node';
-import { shopifyApi, ApiVersion, LATEST_API_VERSION } from '@shopify/shopify-api';
+import '@shopify/shopify-api/adapters/node/index.js';
+import { shopifyApi, LATEST_API_VERSION } from '@shopify/shopify-api';
 import dotenv from 'dotenv';
 
 dotenv.config();

@@ -50,26 +50,18 @@ async function runMigrations() {
       const filePath = path.join(migrationsDir, file);
       const sql = fs.readFileSync(filePath, 'utf8');
 
-      // Split SQL file into individual statements (handling multi-line statements)
-      const statements = sql
-        .split(';')
-        .map(s => s.trim())
-        .filter(s => s.length > 0 && !s.startsWith('--'));
-
-      let successCount = 0;
-      for (const statement of statements) {
-        try {
-          await connection.query(statement);
-          successCount++;
-        } catch (error) {
-          // Skip "table already exists" errors
-          if (!error.message.includes('already exists')) {
-            throw error;
-          }
+      try {
+        // Execute entire SQL file (multipleStatements is enabled)
+        await connection.query(sql);
+        console.log(`  ✓ Migration executed successfully\n`);
+      } catch (error) {
+        // Check if error is about table already existing
+        if (error.message.includes('already exists')) {
+          console.log(`  ⚠ Some tables already exist (skipped)\n`);
+        } else {
+          throw error;
         }
       }
-
-      console.log(`  ✓ Executed ${successCount} statement(s)\n`);
     }
 
     console.log('✅ Migration completed successfully!');
