@@ -1,0 +1,40 @@
+{
+  "name": "shopify-invoice-backend",
+  "version": "0.1.0",
+  "description": "Backend API for Shopify Invoice Generator App",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "migrate": "node scripts/runMigrations.js",
+    "migrate:reset": "node scripts/resetDatabase.js"
+  },
+  "keywords": [
+    "shopify",
+    "invoice",
+    "pdf",
+    "automation"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@sendgrid/mail": "^8.1.0",
+    "@shopify/shopify-api": "^8.0.0",
+    "axios": "^1.6.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-validator": "^7.0.1",
+    "mysql2": "^3.6.0",
+    "node-cron": "^3.0.2",
+    "papaparse": "^5.4.1",
+    "puppeteer": "^21.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
