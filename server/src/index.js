@@ -16,6 +16,20 @@ app.use(cors({
 
 app.use(express.json());
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Invoice Generator API',
+    version: '0.1.0',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      api: '/api',
+      auth: '/auth/callback'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
